@@ -1,6 +1,29 @@
 let restaurant;
 var map;
 
+
+document.addEventListener('DOMContentLoaded', (event) => {
+	handleOffline();
+});
+
+/** Handle offline case
+ * */
+handleOffline = () => {
+	if (!navigator.onLine) {
+		fetchRestaurantFromURL((error, restaurant) => {
+			if (error) { // Got an error!
+				console.error(error);
+			} else {
+				fillBreadcrumb();
+			}
+		});
+		
+		// Hide the map
+		document.querySelector('#map-container').style.display = "none";
+	}
+};
+
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -19,6 +42,7 @@ window.initMap = () => {
 		}
 	});
 }
+
 
 /**
  * Get current restaurant from page URL.
@@ -47,12 +71,12 @@ fetchRestaurantFromURL = (callback) => {
 };
 
 /**
- * Focus on the home nav item to so user could go back to the home page. 
+ * Focus on the home nav item to so user could go back to the home page.
  * This is the only clickable item on this page anyway (exclude the map)
  * */
 
-focusOnTheHomeNav =()=>{
-	document.querySelector('.home-nav').focus();	
+focusOnTheHomeNav = () => {
+	document.querySelector('.home-nav').focus();
 };
 
 /**
@@ -127,7 +151,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-	
+
 	const innerHTML = `
 				<div class="review-header">
 					<p class="review-name">${review.name}</p>
@@ -136,10 +160,10 @@ createReviewHTML = (review) => {
 				<p class="review-rating">Rating: ${review.rating}</p>
 				<p>${review.comments}</p>
 			`;
-	
+
 	const li = document.createElement('li');
 	li.innerHTML = innerHTML;
-	li.setAttribute('role','listitem');
+	li.setAttribute('role', 'listitem');
 	return li;
 };
 

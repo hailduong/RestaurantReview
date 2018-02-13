@@ -10,7 +10,23 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
 	fetchNeighborhoods();
 	fetchCuisines();
+	handleUpdateRestaurantsIfOffline();
 });
+
+
+/**
+ *  Handle the offline case
+ * */
+
+handleUpdateRestaurantsIfOffline = () => {
+	const isOnline = navigator.onLine;
+	if (!isOnline) {
+		// If online, we will add the marker on Google Map, otherwise, do not,
+		// since we won't be able to fetch the Google Map
+		updateRestaurants(false);
+		document.querySelector('#map-container').style.display = "none";
+	}
+};
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -69,11 +85,11 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 };
 
 /**
-* Focus on the filter when everything is loaded
-*/
+ * Focus on the filter when everything is loaded
+ */
 
-focusOnTheFilter = () =>{
-	document.querySelector('#neighborhoods-select').focus();	
+focusOnTheFilter = () => {
+	document.querySelector('#neighborhoods-select').focus();
 };
 
 /**
@@ -95,7 +111,7 @@ window.initMap = () => {
 /**
  * Update page and map for current restaurants.
  */
-updateRestaurants = () => {
+updateRestaurants = (addMarker = true) => {
 	const cSelect = document.getElementById('cuisines-select');
 	const nSelect = document.getElementById('neighborhoods-select');
 
@@ -110,10 +126,10 @@ updateRestaurants = () => {
 			console.error(error);
 		} else {
 			resetRestaurants(restaurants);
-			fillRestaurantsHTML();
+			fillRestaurantsHTML(self.restaurants, addMarker);
 		}
 	})
-}
+};
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
@@ -133,12 +149,12 @@ resetRestaurants = (restaurants) => {
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-fillRestaurantsHTML = (restaurants = self.restaurants) => {
+fillRestaurantsHTML = (restaurants = self.restaurants, addMarkers = true) => {
 	const ul = document.getElementById('restaurants-list');
 	restaurants.forEach(restaurant => {
 		ul.append(createRestaurantHTML(restaurant));
 	});
-	addMarkersToMap();
+	if (addMarkers) addMarkersToMap();
 }
 
 /**
@@ -164,12 +180,12 @@ createRestaurantHTML = (restaurant) => {
 	const address = document.createElement('p');
 	address.innerHTML = restaurant.address;
 	li.append(address);
-	
+
 	li.setAttribute('role', 'listitem');
 
 	const more = document.createElement('a');
 	more.innerHTML = 'View Details';
-	more.setAttribute('role','button');
+	more.setAttribute('role', 'button');
 	more.href = DBHelper.urlForRestaurant(restaurant);
 	li.append(more);
 
