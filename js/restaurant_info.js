@@ -54,7 +54,7 @@ fetchRestaurantFromURL = (callback) => {
 	}
 	const id = getParameterByName('id');
 	if (!id) { // no id found in URL
-		error = 'No restaurant id in URL'
+		error = 'No restaurant id in URL';
 		callback(error, null);
 	} else {
 		DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -76,7 +76,14 @@ fetchRestaurantFromURL = (callback) => {
  * */
 
 focusOnTheHomeNav = () => {
-	document.querySelector('.home-nav').focus();
+	const $homeNav = document.querySelector('.home-nav');
+	$homeNav.focus();
+	
+	// We set 1, not 0, because we want to bypass the map, so we could move from
+	// the navigation, to the restaurant details below.
+	// If we set 0, it will take the map into account the map.
+	$homeNav.setAttribute('tabIndex', 1)
+	
 };
 
 /**
@@ -85,10 +92,12 @@ focusOnTheHomeNav = () => {
 fillRestaurantHTML = (restaurant = self.restaurant) => {
 	const name = document.getElementById('restaurant-name');
 	name.innerHTML = restaurant.name;
+	name.setAttribute('tabIndex', 1);
 
 	const address = document.getElementById('restaurant-address');
 	address.innerHTML = restaurant.address;
-
+	address.setAttribute('tabIndex', 1);
+	
 	const image = document.getElementById('restaurant-img');
 	image.className = 'restaurant-img';
 	image.alt = `${restaurant.name} restaurant photo`;
@@ -96,6 +105,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
 	const cuisine = document.getElementById('restaurant-cuisine');
 	cuisine.innerHTML = restaurant.cuisine_type;
+	
 
 	// fill operating hours
 	if (restaurant.operating_hours) {
@@ -123,6 +133,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
 		hours.appendChild(row);
 	}
+	hours.setAttribute('tabIndex', 1);
 }
 
 /**
@@ -164,6 +175,7 @@ createReviewHTML = (review) => {
 	const li = document.createElement('li');
 	li.innerHTML = innerHTML;
 	li.setAttribute('role', 'listitem');
+	li.setAttribute('tabIndex',1);
 	return li;
 };
 

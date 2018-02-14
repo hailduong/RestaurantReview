@@ -147,7 +147,7 @@ nav h1 a {
     width: 330px;
     display: inline-block;
     border-radius: 10px; }
-    #restaurants-list li h1 {
+    #restaurants-list li h2 {
       color: #f18200;
       font-family: Arial, sans-serif;
       font-size: 14pt;
@@ -177,9 +177,8 @@ nav h1 a {
     background-color: #ccc;
     display: block;
     margin: 0;
-    max-width: 100%;
-    min-height: 248px;
-    min-width: 100%; }
+    width: 100%;
+    height: auto; }
   @media (max-width: 375px) {
     #restaurants-list li {
       margin: 0;
